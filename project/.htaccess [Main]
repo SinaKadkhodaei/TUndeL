@@ -1,0 +1,8 @@
+RewriteEngine on
+RewriteBase /
+
+# Rewrites all URLS without blog in them
+RewriteCond %{REQUEST_URI} !^/Public/
+
+# Rewrite all those to insert /folder
+RewriteRule ^(.*)$ /Public/$1 [L]

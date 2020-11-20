@@ -1,0 +1,27 @@
+{
+    "database": {
+        "name": "db_test",
+        "host": "localhost",
+        "port": "3306",
+        "username": "root",
+        "password": "root"
+    },
+    "app": {
+        "name": "TUndeL Application",
+        "version": "v1.0",
+        "privateKey": "3dc5c269128e9a7816841f30304ecb30",
+        "sessionEncrypt": false,
+        "csrfCountAtTime": 10,
+        "debugMode": true,
+        "debugModeExceptions": [],
+        "requirements": {
+            "mysql": "v8.0.18",
+            "php": "v7.3.11"
+        }
+    },
+    "framework": {
+        "name": "TUndeL",
+        "version": "v0.8",
+        "release": "202011201555"
+    }
+}

@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ __Run.php?__URL=$0 [QSA,L]

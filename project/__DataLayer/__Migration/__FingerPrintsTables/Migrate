@@ -1,0 +1,42 @@
+<?php
+
+use __DataLayer\__Driver\__Migration;
+
+$__fastBoot = true;
+@include(__DIR__ . '/../../../__Bootstrap/__Bases/__FirstConfigs.php');
+
+$migrations = glob(PrjDir . '/__DataLayer/__Migration/__FingerPrintsTables/*.php');
+$migrationsClass = [];
+
+foreach ($migrations as &$migration) {
+	$migration = '\\__DataLayer\\__Migration\\__FingerPrintsTables\\' . basename($migration, '.php');
+	$migration = new $migration();
+	$migrationsClass[$migration->priority ?? (array_key_last($migrationsClass) + 1)] = &$migration;
+}
+$priorities = array_keys($migrationsClass);
+sort($priorities);
+
+foreach ($priorities as $priority)
+	$migrationsClass[$priority]->make();
+
+$queries = explode(';', __Migration::$sql);
+
+@header('content-type:text/plain');
+DB::changeDB(\__Bootstrap\__Configs::database()->name2);
+DB::startTransaction();
+for ($i = 0; $i < count($migrationsClass); $i++) {
+
+	$class = basename(get_class($migrationsClass[$priorities[$i]]));
+	$res = DB::raw($queries[$i], [], true);
+
+	if ($res['status'] === false) {
+		DB::rollBack();
+		echo (" ** Rolled Back ...\n *** Error on class " . $class . "\n *** Please remove all tables in migration from database and ReMigrate");
+		die();
+	}
+
+	echo " * The table from class " . $class . " has created\n";
+}
+DB::commitTransaction();
+
+echo "\n * ".count($migrationsClass)." table has created\n"; 
