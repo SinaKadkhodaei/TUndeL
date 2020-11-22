@@ -2,23 +2,23 @@
 
 namespace __DataLayer\__Migration\__Tables;
 
-class Stages extends \__DataLayer\__Driver\__Migration
+class Test extends \__DataLayer\__Driver\__Migration
 {
-	public $priority = 2;
+	public $priority = 1;
 
 	public function make()
 	{
-		$this->table('stages');
+		$this->table('test');
 
 		$this
-			->field('id_stages')
-			->tinyInt()
+			->field('id_test')
+			->smallInt(5)
 			->unsigned()
 			->increment()
 			->notNull()
 			->primaryKey();
 		$this
-			->field('name')
+			->field('test_name')
 			->string(50)
 			->notNull();
 		$this
@@ -26,11 +26,6 @@ class Stages extends \__DataLayer\__Driver\__Migration
 			->bool()
 			->notNull()
 			->defaultValue(1);
-		$this
-			->field('created_at')
-			->timestamp()
-			->defaultValue('CURRENT_TIMESTAMP', true)
-			->notNull();
 
 		$this->endTable();
 	}
