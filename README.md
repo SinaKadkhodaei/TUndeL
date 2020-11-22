@@ -1,6 +1,6 @@
 **App Name : TUndeL Framework<br/>Current Version : 0.8<br/>Developer : Sina Kadkhodaei**<br/>
 
-  A mini framework I call TUndeL (Two UnderLine) that based on MVC architecture and PHP technology
+  A mini framework which I named TUndeL (Two UnderLine) based on MVC architecture and PHP technology
 
 ---
 
