@@ -59,7 +59,7 @@ class Validator
 								$errors[] =  __ValidatorErrors::string('betweenLen', ['cast' => $cast, 'minLen' => $cond['betweenLen'][0], 'maxLen' => $cond['betweenLen'][1]]);
 						if (isset($cond['len']))
 							if (strlen($_data[$key]) !== $cond['len'])
-								$errors[] = __ValidatorErrors::string('len', ['cast' => $cast, 'minLen' => $cond['betweenLen'][0], 'maxLen' => $cond['betweenLen'][1]]);
+								$errors[] = __ValidatorErrors::string('len', ['cast' => $cast, 'len' => $cond['len']]);
 						break;
 					case TypeInt:
 						if (!is_numeric($_data[$key]))
@@ -74,6 +74,18 @@ class Validator
 						if (isset($cond['between']))
 							if ($_data[$key] < $cond['between'][0] || $_data[$key] > $cond['between'][1])
 								$errors[] = __ValidatorErrors::int('between', ['cast' => $cast, 'min' => $cond['between'][0], 'max' => $cond['between'][1]]);
+						if (isset($cond['maxLen']))
+							if (strlen($_data[$key]) > $cond['maxLen'])
+								$errors[] =  __ValidatorErrors::string('maxLen', ['cast' => $cast, 'maxLen' => $cond['maxLen']]);
+						if (isset($cond['minLen']))
+							if (strlen($_data[$key]) < $cond['minLen'])
+								$errors[] =  __ValidatorErrors::string('minLen', ['cast' => $cast, 'minLen' => $cond['minLen']]);
+						if (isset($cond['betweenLen']))
+							if (strlen($_data[$key]) < $cond['betweenLen'][0] || strlen($_data[$key]) > $cond['betweenLen'][1])
+								$errors[] =  __ValidatorErrors::string('betweenLen', ['cast' => $cast, 'minLen' => $cond['betweenLen'][0], 'maxLen' => $cond['betweenLen'][1]]);
+						if (isset($cond['len']))
+							if (strlen($_data[$key]) !== $cond['len'])
+								$errors[] = __ValidatorErrors::string('len', ['cast' => $cast, 'len' => $cond['len']]);
 						break;
 					case TypeBool:
 						if (!is_bool($_data[$key]))

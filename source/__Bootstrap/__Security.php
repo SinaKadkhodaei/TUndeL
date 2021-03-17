@@ -8,35 +8,19 @@ use Session;
 class __Security
 {
 	private static
-		$csrfForAll = false,
-		$csrfCreationFlag = false;
+		$csrfForAll = false;
 
 	/**
 	 * @return string csrf code
 	 */
 	public static function makeCsrf()
 	{
-		if (self::$csrfCreationFlag === false) {
-			$csrf = md5(date(__Configs::app()->privateKey . 'dMY' . ((string) rand(0, 5000)) . 'His'));
-			$csrfS = Session::__();
-			if (isset($csrfS['csrfPointer']))
-				$csrfS['csrfPointer'] = ($csrfS['csrfPointer'] + 1) % __Configs::app()->csrfCountAtTime;
-			else
-				$csrfS['csrfPointer'] = 0;
-
-			$csrfS[__K::security()->csrf][$csrfS['csrfPointer']] = $csrf;
-			Session::__(
-				[
-					__K::security()->csrf => $csrfS[__K::security()->csrf],
-					'csrfPointer' => $csrfS['csrfPointer']
-				]
-			);
-
-			self::$csrfCreationFlag = true;
-		} else {
-			$csrf = Session::__();
-			$csrf = $csrf[__K::security()->csrf][$csrf['csrfPointer']];
-		}
+		$csrf = Session::__();
+		if (empty($csrf[__K::security()->csrf])) {
+			$csrf = bin2hex(random_bytes(32));
+			Session::__([__K::security()->csrf => $csrf]);
+		} else
+			$csrf = $csrf[__K::security()->csrf];
 
 		return $csrf;
 	}
@@ -56,15 +40,10 @@ class __Security
 		elseif (isset($_POST[$tokenFieldName]))
 			$csrf = $_POST[$tokenFieldName];
 
-		if (in_array($csrf, Session::__()[__K::security()->csrf] ?? []))
+		if (hash_equals($csrf, Session::__()[__K::security()->csrf] ?? null))
 			return true;
 
 		return false;
-	}
-
-	public static function csrfUnlock()
-	{
-		self::$csrfCreationFlag = false;
 	}
 
 	/**

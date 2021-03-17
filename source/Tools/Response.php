@@ -85,13 +85,18 @@ class Response
 
 			case 'object':
 			case 'array':
-				$_data = json_encode($_data);
 				$merge = __System::mergeResponse();
-				if (!empty($merge)) {
-					$_data = array_merge(json_decode($_data, true), $merge);
-					$_data = json_encode($_data);
-				}
-				$_type = 'array';
+				if (!empty($merge))
+					$_data = array_merge($_data, $merge);
+
+				$tmp = json_encode($_data);
+				if ($tmp === false) {
+					$_type = 'string';
+					$tmp = var_export($_data, true);
+				} else
+					$_type = 'array';
+
+				$_data = $tmp;
 				break;
 		}
 	}
@@ -172,7 +177,8 @@ class Response
 	 */
 	public static function errorHandle(int $_statusCode = 404, $_TUndeLViewData = null, string $_statusMessage = null)
 	{
-		__Errors::handle($_statusCode);
+		self::httpCode($_statusCode, $_statusMessage);
+		__Errors::handle($_statusCode, $_TUndeLViewData);
 		$params = array_keys(get_defined_vars());
 		if ($_TUndeLViewData !== null)
 			foreach ($_TUndeLViewData as $k => $v)
@@ -182,7 +188,6 @@ class Response
 		$name = PrjDir . self::VENS . $_statusCode . '.php';
 		${'httpCode'} = $_statusCode;
 		${'httpMessage'} = $_statusMessage;
-		self::httpCode($_statusCode, $_statusMessage);
 
 		unset($k, $v, $_TUndeLViewData);
 		require_once($name);
@@ -226,8 +231,6 @@ class Response
 			Session::__(['data' => $_data]);
 
 		$rnd = '';
-		// __Security::csrfUnlock();
-		// $rnd = '?redId=' . rand(1000, 9999);
 
 		header('Location: ' . $_url .  $rnd, false);
 		exit(0);

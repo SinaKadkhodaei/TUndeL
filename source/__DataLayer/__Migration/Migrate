@@ -12,7 +12,8 @@ $migrationsClass = [];
 foreach ($migrations as &$migration) {
 	$migration = '\\__DataLayer\\__Migration\\__Tables\\' . basename($migration, '.php');
 	$migration = new $migration();
-	$migrationsClass[$migration->priority ?? (array_key_last($migrationsClass) + 1)] = &$migration;
+	$migrationId = ($migration->priority.hrtime()[1]) ?? (array_key_last($migrationsClass) + 1);
+	$migrationsClass[$migrationId] = &$migration;
 }
 $priorities = array_keys($migrationsClass);
 sort($priorities);

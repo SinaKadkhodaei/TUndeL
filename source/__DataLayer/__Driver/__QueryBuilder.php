@@ -3,6 +3,7 @@
 namespace __DataLayer\__Driver;
 
 use \__DataLayer\__Driver\__DB;
+use ReflectionClass;
 
 abstract class __QueryBuilder
 {
@@ -151,7 +152,8 @@ class __SelectFrom
 		$unionLimit = '', // 0,1
 		$union = null,
 		$unionOrderBy = '',
-		$uniontype = '';
+		$uniontype = '',
+		$with = [];
 
 
 	function __construct(string $_className = '', string $_tableName = '', &$_fieldTypes = null, &$_fieldCasting = null, string $_primaryKey = 'id')
@@ -506,7 +508,7 @@ class __SelectFrom
 	public function sql()
 	{
 		$params = [];
-		$query = 'select ' . $this->columns . ' from ' . $this->table;
+		$query = 'select ' . $this->columns . ' from ' . $this->table . ' ';
 
 		foreach ($this->joinTable as $join) {
 			$query .=  $join[1] . ' join ' . $join[0];
